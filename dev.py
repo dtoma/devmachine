@@ -4,6 +4,7 @@
 import argparse
 import os
 import requests
+import subprocess
 
 
 parser = argparse.ArgumentParser(description='Create a development environment.',
@@ -23,7 +24,18 @@ vagrantfile_url = 'https://raw.githubusercontent.com/dtoma/vagrantfiles/master/{
 roles_url = 'https://raw.githubusercontent.com/dtoma/ansible-playbooks/master/roles/{}/tasks/main.yml'
 
 
+def parse_cmdline():
+    """Parse the command-line arguments to get the OS and the list of packages to install."""
+    args = parser.parse_args()
+    vm_os = args.os
+    print('OS:', vm_os)
+    vm_packages = args.packages + ['update']
+    print('Packages:', ', '.join(vm_packages))
+    return vm_os, vm_packages
+
+
 def download_vagrantfile(vm_os):
+    """Download the Vagrantfile from GitHub."""
     print('Download Vagrantfile')
     resp = requests.get(vagrantfile_url.format(vm_os))
     if resp.status_code == 200:
@@ -33,6 +45,7 @@ def download_vagrantfile(vm_os):
 
 
 def download_ansible_roles(vm_packages):
+    """Download the ansible roles from GitHub."""
     # Simple for now, rework later to handle templates
     for role in vm_packages:
         print('Download ansible role for {}'.format(role))
@@ -45,6 +58,7 @@ def download_ansible_roles(vm_packages):
 
 
 def write_playbook(roles):
+    """Write a playbook that calls a list of roles."""
     print('Write ansible playbook')
     with open('playbook.yml', 'w+') as pb:
         pb.write(('---\n'
@@ -58,24 +72,26 @@ def write_playbook(roles):
 
 
 def create_workspace():
+    """Create a folder to share with the VM."""
     print('Create workspace')
     os.makedirs('./workspace', exist_ok=True)
     print('Done')
 
 
 def run_vagrant_up():
-    pass
+    """Run vagrant up to create and provision the VM."""
+    subprocess.call('vagrant up', shell=True)
 
 
 if __name__ == '__main__':
-    args = parser.parse_args()
-    vm_os = args.os
-    print('OS:', vm_os)
-    vm_packages = args.packages + ['update']
-    print('Packages:', ', '.join(vm_packages))
+    vm_os, vm_packages = parse_cmdline()
 
     download_vagrantfile(vm_os)
+
     download_ansible_roles(vm_packages)
+
     write_playbook(vm_packages)
+
     create_workspace()
+
     run_vagrant_up()
