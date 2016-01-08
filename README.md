@@ -2,10 +2,20 @@
 
 Setup a development environment in a few seconds.
 
+---
+
 Requirements:
 
 - [vagrant](https://www.vagrantup.com/)
+- python 3.x
 - python [requests](http://docs.python-requests.org/en/latest/)
+
+---
+
+- [Available OSs](https://github.com/dtoma/ansible-playbooks)
+- [Available roles](https://github.com/dtoma/vagrantfiles)
+
+---
 
 Usage:
 
@@ -14,6 +24,8 @@ Usage:
 Example:
 
 `dev ubuntu/trusty64 haskell-stack`
+
+---
 
 To Do:
 
