@@ -4,8 +4,8 @@ Setup a development environment in a few seconds.
 
 Requirements:
 
-- vagrant
-- python `requests`
+- [vagrant](https://www.vagrantup.com/)
+- python [requests](http://docs.python-requests.org/en/latest/)
 
 Usage:
 
