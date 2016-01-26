@@ -19,7 +19,7 @@ PARSER.add_argument('os',
 
 PARSER.add_argument('packages',
                     type=str,
-                    nargs='+',
+                    nargs='*',
                     help='list of packages to install')
 
 RAW_GITHUB_URL = 'https://raw.githubusercontent.com/dtoma/'
@@ -42,7 +42,7 @@ def download_vagrantfile(distro):
     resp = requests.get(VAGRANTFILE_URL.format(distro))
 
     if resp.status_code == 200:
-        with open('Vagrantfile', 'w+') as vfile:
+        with open('Vagrantfile', 'w') as vfile:
             vfile.write(resp.text)
 
         print('Done')
@@ -69,7 +69,7 @@ def write_playbook(roles):
     """Write a playbook that calls a list of roles."""
     print('Write ansible playbook')
 
-    with open('playbook.yml', 'w+') as pbook:
+    with open('playbook.yml', 'w') as pbook:
         pbook.write(('---\n'
                      '- hosts: all\n'
                      '  sudo: yes\n'
